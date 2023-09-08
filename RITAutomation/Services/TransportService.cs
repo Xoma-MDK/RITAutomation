@@ -12,18 +12,16 @@ namespace RITAutomation.Services
 {
     public class TransportService
     {
-        SqlDataAdapter adapter;
-        SqlCommandBuilder commandBuilder;
-        string connectionString = @"Data Source=.\SQLEXPRESS;Initial Catalog=usersdb;Integrated Security=True";
-        string sql = "SELECT * FROM ";
+        private const string ConnectionString = @"Data Source=.\SQLEXPRESS;Initial Catalog=usersdb;Integrated Security=True";
+        private const string Sql = "SELECT * FROM TransportUnitsCoordinates";
 
         public List<TransportUnit> GeTransportUnits()
         {
             List<TransportUnit> units = new List<TransportUnit>();
-            using (SqlConnection connection = new SqlConnection(connectionString))
+            using (SqlConnection connection = new SqlConnection(ConnectionString))
             {
                 connection.Open();
-                SqlCommand command = new SqlCommand(sql, connection);
+                SqlCommand command = new SqlCommand(Sql, connection);
                 SqlDataReader reader = command.ExecuteReader();
 
                 if (reader.HasRows) 
