@@ -8,17 +8,24 @@ namespace RITAutomation.Models
 {
     public class TransportUnit
     {
-        public int Id;
+        public int? Id;
         public string Name;
         public double Latitude;
-        public double Longitude;
+        public double Longtitude;
 
-        public TransportUnit(int id, string name, double latitude, double longitude)
+        public TransportUnit(int id, string name, double latitude, double longtitude)
         {
             Id = id;
             Name = name;
             Latitude = latitude;
-            Longitude = longitude;
+            Longtitude = longtitude;
+        }
+        public TransportUnit( string name, double latitude, double longtitude)
+        {
+            Id = null;
+            Name = name;
+            Latitude = latitude;
+            Longtitude = longtitude;
         }
     }
 }
