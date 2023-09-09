@@ -8,6 +8,7 @@ using RITAutomation.Models;
 using System.Data;
 using System.Windows.Forms;
 using System.Xml.Linq;
+using RITAutomation.Utils;
 
 namespace RITAutomation.Services
 {
@@ -18,39 +19,36 @@ namespace RITAutomation.Services
         public static List<TransportUnit> GetTransportUnits()
         {
             List<TransportUnit> units = new List<TransportUnit>();
-            try
+
+            using (SqlConnection connection = new SqlConnection(ConnectionString))
             {
-                using (SqlConnection connection = new SqlConnection(ConnectionString))
+                connection.Open();
+                SqlCommand command = new SqlCommand("dbo.GetAllTransportUnits", connection)
                 {
-                    connection.Open();
-                    SqlCommand command = new SqlCommand("dbo.GetAllTransportUnits", connection)
-                    {
-                        CommandType = CommandType.StoredProcedure
-                    };
-                    SqlDataReader reader = command.ExecuteReader();
+                    CommandType = CommandType.StoredProcedure
+                };
+                SqlDataReader reader = command.ExecuteReader();
 
-                    if (reader.HasRows)
-                    {
+                if (reader.HasRows)
+                {
 
-                        while (reader.Read())
-                        {
-                            units.Add(new TransportUnit(
-                                id: reader.GetInt32(0),
-                                name: reader.GetString(1),
-                                longtitude: reader.GetDouble(2),
-                                latitude: reader.GetDouble(3))
-                            );
-                        }
+                    while (reader.Read())
+                    {
+                        units.Add(new TransportUnit(
+                            id: reader.GetInt32(0),
+                            name: reader.GetString(1),
+                            longtitude: reader.GetDouble(2),
+                            latitude: reader.GetDouble(3))
+                        );
                     }
                 }
-                return units;
+                else
+                {
+                    throw new NoRecordsInDatabase();
+                }
             }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex.ToString());
-            }
+            return units;
 
-            return null;
         }
 
         public static void UpdateTransportUnit(TransportUnit unit)
